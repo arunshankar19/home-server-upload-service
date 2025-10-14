@@ -1,0 +1,20 @@
+services:
+  upload-service:
+    build:
+      context: .
+      secrets:
+        - netrc
+    ports:
+      - 8001:${API_PORT:-8001}
+    networks:
+      - upload-network
+    environment:
+      - API_VERSION=${API_VERSION}
+      - API_PORT=${API_PORT}
+
+networks:
+  upload-network:
+
+secrets:
+  netrc:
+    file: ./.netrc
