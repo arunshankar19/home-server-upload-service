@@ -2,6 +2,7 @@ package database
 
 import "context"
 
+// DB defines a minimal database abstraction used by the application.
 type DB interface {
 	Ping(ctx context.Context) error
 

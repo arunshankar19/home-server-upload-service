@@ -103,6 +103,17 @@ func WithSslMode(sslMode string) option {
 	}
 }
 
+// WithSearchPath sets the schema for db
+func WithSearchPath(sslMode string) option {
+	return func(s *string) {
+		if *s == "" {
+			*s = fmt.Sprintf("search_path=%s", sslMode)
+		} else {
+			*s = fmt.Sprintf("%s search_path=%s", *s, sslMode)
+		}
+	}
+}
+
 // Ping pings the db server
 func (db db) Ping(ctx context.Context) error {
 	return db.connPool.Ping(ctx)
