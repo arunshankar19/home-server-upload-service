@@ -71,6 +71,7 @@ func (u *uploadUsecase) InitiateMultipartUpload(
 
 	err = u.uploadRepository.InsertUploadEvent(ctx, uploadEvent)
 	if err != nil {
+		u.log.Error("failed to insert event in db", map[string]any{"error": err})
 		return "", err
 	}
 	return uploadID, nil
