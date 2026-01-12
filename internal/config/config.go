@@ -20,10 +20,11 @@ type config struct {
 	TraceExpoterURL      string `required:"true" split_words:"true"`
 
 	// storage
-	MinioAddr            string `required:"true" split_words:"true"`
-	MinioAccessKeyID     string `required:"true" split_words:"true"`
-	MinioSecretAccessKey string `required:"true" split_words:"true"`
-	MinioDataBucketName  string `required:"true" split_words:"true"`
+	MinioAddr                     string `required:"true" split_words:"true"`
+	MinioAccessKeyID              string `required:"true" split_words:"true"`
+	MinioSecretAccessKey          string `required:"true" split_words:"true"`
+	MinioDataBucketName           string `required:"true" split_words:"true"`
+	MinioPresignedURLExpInMinutes int    `required:"true" split_words:"true"`
 }
 
 // NewAppConfig returns the app config

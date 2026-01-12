@@ -19,7 +19,7 @@ type validationFailResponse struct {
 
 type successResponse struct {
 	Success bool `json:"success"`
-	Data    any  `json:"data"`
+	Data    any  `json:"data,omitempty"`
 }
 
 type ErrFieldDetails struct {

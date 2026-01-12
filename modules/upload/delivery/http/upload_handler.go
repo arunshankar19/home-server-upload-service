@@ -31,7 +31,7 @@ func (h *uploadHandler) InitiateMultipartUpload(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	uploadID, err := h.uploadUsecase.InitiateMultipartUpload(ctx, initiateUploadReq)
+	initiateUploadResult, err := h.uploadUsecase.InitiateMultipartUpload(ctx, initiateUploadReq)
 	if err != nil {
 		if errors.Is(err, domain.ErrUnauthorizedUser) {
 			response.Fail(w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
@@ -41,5 +41,46 @@ func (h *uploadHandler) InitiateMultipartUpload(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	response.Success(w, http.StatusOK, domain.InitiateUploadResponseDTO{UploadID: uploadID})
+	response.Success(w, http.StatusOK, domain.InitiateUploadResponseDTO{
+		UploadID:      initiateUploadResult.UploadID,
+		UploadEventID: initiateUploadResult.UploadEventID,
+	})
+}
+
+// GetPresignedURL handles presigned url http handler
+func (h *uploadHandler) GetPresignedURL(w http.ResponseWriter, r *http.Request) {
+	var presignedURLReq domain.PresignedMultipartURLReqDTO
+
+	err := json.NewDecoder(r.Body).Decode(&presignedURLReq)
+	if err != nil {
+		response.Fail(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+		return
+	}
+
+	url, err := h.uploadUsecase.GetPresignedURL(r.Context(), presignedURLReq)
+	if err != nil {
+		response.Fail(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	response.Success(w, http.StatusOK, domain.PresignedMultipartResponseDTO{PresignedURL: url})
+}
+
+// CompleteMultipartUpload is the handler for committing the multipart upload
+func (h *uploadHandler) CompleteMultipartUpload(w http.ResponseWriter, r *http.Request) {
+	var completeUploadReq domain.CompleteUploadReqDTO
+
+	err := json.NewDecoder(r.Body).Decode(&completeUploadReq)
+	if err != nil {
+		response.Fail(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+		return
+	}
+
+	err = h.uploadUsecase.CompleteUpload(r.Context(), completeUploadReq)
+	if err != nil {
+		response.Fail(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	response.Success(w, http.StatusOK, nil)
 }

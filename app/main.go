@@ -94,7 +94,7 @@ func main() {
 	storage, err := storage.NewMinioStorageClient(storageAddr, storageAccesskey, secretAccessKey)
 
 	uploadRepo := uploadRepository.NewUploadRepository(db, trace)
-	uploadUsecae := uploadUsecase.NewUploadUsecase(l, appConfig.MinioDataBucketName, storage, uploadRepo)
+	uploadUsecae := uploadUsecase.NewUploadUsecase(l, appConfig.MinioDataBucketName, appConfig.MinioPresignedURLExpInMinutes, storage, uploadRepo)
 	uploadHandler := uploadHandler.NewUploadHandler(uploadUsecae)
 
 	httpHandler := handlers{
@@ -121,6 +121,8 @@ func initV1Router(r *chi.Mux, h handlers) {
 		w.Write([]byte{})
 	})
 	apiV1Router.Post("/init-upload", h.uploadHandler.InitiateMultipartUpload)
+	apiV1Router.Post("/get-presigned-url", h.uploadHandler.GetPresignedURL)
+	apiV1Router.Post("/complete-upload", h.uploadHandler.CompleteMultipartUpload)
 
 	r.Mount("/v1", apiV1Router)
 }
