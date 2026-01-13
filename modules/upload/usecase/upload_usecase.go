@@ -71,12 +71,14 @@ func (u *uploadUsecase) InitiateMultipartUpload(
 	}
 
 	uploadEvent := domain.UploadEvent{
-		FileName:  initiateUploadReq.FileName,
-		FileType:  initiateUploadReq.FileType,
-		FileExt:   initiateUploadReq.FileExtension,
-		FileSize:  initiateUploadReq.FileSize,
-		Status:    uploadPending,
-		CreatedBy: userID,
+		FileName:          initiateUploadReq.FileName,
+		FileType:          initiateUploadReq.FileType,
+		FileExt:           initiateUploadReq.FileExtension,
+		FileSize:          initiateUploadReq.FileSize,
+		IsMultipart:       initiateUploadReq.IsMultipart,
+		MultipartUploadID: uploadID,
+		Status:            uploadPending,
+		CreatedBy:         userID,
 	}
 
 	uploadEventID, err := u.uploadRepository.InsertUploadEvent(ctx, uploadEvent)

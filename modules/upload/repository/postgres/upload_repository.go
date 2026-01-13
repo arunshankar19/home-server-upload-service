@@ -22,10 +22,12 @@ const (
 		file_type,
 		file_ext,
 		file_size,
+		is_multipart,
+		multipart_upload_id,
 		status,
 		created_by,
 		created_at
-	) VALUES ($1, $2, $3, $4, $5, $6, $7)
+	) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	RETURNING id;
 	`
 
@@ -48,12 +50,22 @@ func (r *uploadRepository) InsertUploadEvent(ctx context.Context, uploadEvent do
 	ctx, span := r.tracer.StartSpan(ctx, "Repository-InsertUploadEvent")
 	defer span.End()
 
-	var uploadEventID string
+	var (
+		multipartUploadID *string
+		uploadEventID     string
+	)
+
+	if uploadEvent.IsMultipart {
+		multipartUploadID = &uploadEvent.MultipartUploadID
+	}
+
 	err := r.db.QueryRow(ctx, queryInsertUploadEvents,
 		uploadEvent.FileName,
 		uploadEvent.FileType,
 		uploadEvent.FileExt,
 		uploadEvent.FileSize,
+		uploadEvent.IsMultipart,
+		multipartUploadID,
 		uploadEvent.Status,
 		uploadEvent.CreatedBy,
 		time.Now(),

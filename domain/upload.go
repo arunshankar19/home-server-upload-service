@@ -10,16 +10,18 @@ import (
 
 // UploadEvent represents an upload event in db
 type UploadEvent struct {
-	ID        uuid.UUID
-	FileName  string
-	FileType  string
-	FileExt   string
-	FileSize  int
-	Status    string
-	CreatedBy uuid.UUID
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
+	ID                uuid.UUID
+	FileName          string
+	FileType          string
+	FileExt           string
+	FileSize          int
+	Status            string
+	IsMultipart       bool
+	MultipartUploadID string
+	CreatedBy         uuid.UUID
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+	DeletedAt         time.Time
 }
 
 // InitUploadResult holds data from init upload

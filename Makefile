@@ -5,7 +5,7 @@ migrate-up:
 	@docker compose run --rm migrate up
 
 migrate-down:
-	@docker compose run --rm migrate down
+	@docker compose run --rm migrate down $(COUNT)
 
 migrate-create:
 	@docker compose run --rm migrate create -ext sql -dir /migrations -seq=false $(NAME)
