@@ -20,8 +20,8 @@ func NewUploadHandler(uploadUsecase domain.UploadUsecase) domain.UploadHandler {
 	}
 }
 
-// InitiateMultipartUpload starts an multipart upload
-func (h *uploadHandler) InitiateMultipartUpload(w http.ResponseWriter, r *http.Request) {
+// InitiateUpload starts an multipart upload
+func (h *uploadHandler) InitiateUpload(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var initiateUploadReq domain.InitiateUploadReqDTO
 
@@ -31,7 +31,7 @@ func (h *uploadHandler) InitiateMultipartUpload(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	initiateUploadResult, err := h.uploadUsecase.InitiateMultipartUpload(ctx, initiateUploadReq)
+	initiateUploadResult, err := h.uploadUsecase.InitiateUpload(ctx, initiateUploadReq)
 	if err != nil {
 		if errors.Is(err, domain.ErrUnauthorizedUser) {
 			response.Fail(w, http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
@@ -66,8 +66,8 @@ func (h *uploadHandler) GetPresignedURL(w http.ResponseWriter, r *http.Request) 
 	response.Success(w, http.StatusOK, domain.PresignedMultipartResponseDTO{PresignedURL: url})
 }
 
-// CompleteMultipartUpload is the handler for committing the multipart upload
-func (h *uploadHandler) CompleteMultipartUpload(w http.ResponseWriter, r *http.Request) {
+// CompleteUpload is the handler for committing the multipart upload
+func (h *uploadHandler) CompleteUpload(w http.ResponseWriter, r *http.Request) {
 	var completeUploadReq domain.CompleteUploadReqDTO
 
 	err := json.NewDecoder(r.Body).Decode(&completeUploadReq)

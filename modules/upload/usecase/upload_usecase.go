@@ -42,8 +42,8 @@ func NewUploadUsecase(
 	}
 }
 
-// InitiateMultipartUpload starts a multipart upload and marks it in db
-func (u *uploadUsecase) InitiateMultipartUpload(
+// InitiateUpload starts a multipart upload and marks it in db
+func (u *uploadUsecase) InitiateUpload(
 	ctx context.Context,
 	initiateUploadReq domain.InitiateUploadReqDTO,
 ) (*domain.InitUploadResult, error) {

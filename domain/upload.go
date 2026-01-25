@@ -39,14 +39,14 @@ type UploadRepository interface {
 
 // UploadUsecase defines business usecase funcs
 type UploadUsecase interface {
-	InitiateMultipartUpload(ctx context.Context, initiateUploadReq InitiateUploadReqDTO) (*InitUploadResult, error)
+	InitiateUpload(ctx context.Context, initiateUploadReq InitiateUploadReqDTO) (*InitUploadResult, error)
 	GetPresignedURL(ctx context.Context, presignedURLReq PresignedMultipartURLReqDTO) (string, error)
 	CompleteUpload(ctx context.Context, completeUploadReq CompleteUploadReqDTO) error
 }
 
 // UploadHandler defines http handlers
 type UploadHandler interface {
-	InitiateMultipartUpload(w http.ResponseWriter, r *http.Request)
+	InitiateUpload(w http.ResponseWriter, r *http.Request)
 	GetPresignedURL(w http.ResponseWriter, r *http.Request)
-	CompleteMultipartUpload(w http.ResponseWriter, r *http.Request)
+	CompleteUpload(w http.ResponseWriter, r *http.Request)
 }
