@@ -120,9 +120,9 @@ func initV1Router(r *chi.Mux, h handlers) {
 		w.WriteHeader(http.StatusNoContent)
 		w.Write([]byte{})
 	})
-	apiV1Router.Post("/init-upload", h.uploadHandler.InitiateMultipartUpload)
+	apiV1Router.Post("/init-upload", h.uploadHandler.InitiateUpload)
 	apiV1Router.Post("/get-presigned-url", h.uploadHandler.GetPresignedURL)
-	apiV1Router.Post("/complete-upload", h.uploadHandler.CompleteMultipartUpload)
+	apiV1Router.Post("/complete-upload", h.uploadHandler.CompleteUpload)
 
 	r.Mount("/v1", apiV1Router)
 }
