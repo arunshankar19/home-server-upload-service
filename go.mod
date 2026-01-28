@@ -3,7 +3,7 @@ module github.com/arunshankar19/home-server-upload-service
 go 1.25.1
 
 require (
-	github.com/arunshankar19/home-server-common-utils v0.4.0
+	github.com/arunshankar19/home-server-common-utils v0.5.0
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/google/uuid v1.6.0

@@ -50,3 +50,21 @@ type UploadHandler interface {
 	GetPresignedURL(w http.ResponseWriter, r *http.Request)
 	CompleteUpload(w http.ResponseWriter, r *http.Request)
 }
+
+// batch domains
+
+// UploadBatchRepository defines batch repo funcs
+type UploadBatchRepository interface {
+	UpdateStaleUploadStatus(ctx context.Context, status string, ids []string) error
+	FetchStaleUploads(ctx context.Context, fromTime time.Time, limit int, offset int) ([]StaleMultipartUpload, error)
+}
+
+// UploadBatchUsecase defines batch business usecase
+type UploadBatchUsecase interface{}
+
+// StaleMultipartUpload holds upload ID and event id
+type StaleMultipartUpload struct {
+	ID                string
+	MultipartUploadID string
+	ObjectName        string
+}
