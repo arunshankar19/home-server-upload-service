@@ -92,6 +92,10 @@ func main() {
 	secretAccessKey := storage.WithSecretAccessKey(appConfig.MinioSecretAccessKey)
 
 	storage, err := storage.NewMinioStorageClient(storageAddr, storageAccesskey, secretAccessKey)
+	if err != nil {
+		l.Error("failed to initialize storage client", map[string]any{"error": err})
+		panic(err)
+	}
 
 	uploadRepo := uploadRepository.NewUploadRepository(db, trace)
 	uploadUsecae := uploadUsecase.NewUploadUsecase(l, appConfig.MinioDataBucketName, appConfig.MinioPresignedURLExpInMinutes, storage, uploadRepo)
