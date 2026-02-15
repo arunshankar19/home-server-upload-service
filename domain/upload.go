@@ -60,7 +60,9 @@ type UploadBatchRepository interface {
 }
 
 // UploadBatchUsecase defines batch business usecase
-type UploadBatchUsecase interface{}
+type UploadBatchUsecase interface {
+	AbortStaleMultipartUploads(ctx context.Context, batchSize int, uploadExpiryDuration time.Duration) error
+}
 
 // StaleMultipartUpload holds upload ID and event id
 type StaleMultipartUpload struct {

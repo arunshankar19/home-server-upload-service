@@ -25,6 +25,42 @@ services:
       - MINIO_ADDR=${MINIO_ADDR}
       - MINIO_DATA_BUCKET_NAME=${MINIO_DATA_BUCKET_NAME}
       - MINIO_PRESIGNED_URL_EXP_IN_MINUTES=${MINIO_PRESIGNED_URL_EXP_IN_MINUTES}
+      - BATCH_SIZE=${BATCH_SIZE}
+      - UPLOAD_EXPIRY_DURATION_IN_HOURS=${UPLOAD_EXPIRY_DURATION_IN_HOURS}
+
+    depends_on:
+      uploader-db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  upload-service-batch:
+    build:
+      context: .
+      dockerfile: Dockerfile-batch
+      secrets:
+        - netrc
+    networks:
+      - upload-network
+    environment:
+      - API_VERSION=${API_VERSION}
+      - API_PORT=${API_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+      - POSTGRES_SSL_MODE=${POSTGRES_SSL_MODE}
+      - POSTGRES_SEARCH_PATH=${POSTGRES_SEARCH_PATH}
+      - OBSERVABILITY_ENABLED=${OBSERVABILITY_ENABLED}
+      - TRACE_EXPOTER_URL=${TRACE_EXPOTER_URL}
+      - MINIO_ACCESS_KEY_ID=${MINIO_ACCESS_KEY_ID}
+      - MINIO_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - MINIO_ADDR=${MINIO_ADDR}
+      - MINIO_DATA_BUCKET_NAME=${MINIO_DATA_BUCKET_NAME}
+      - MINIO_PRESIGNED_URL_EXP_IN_MINUTES=${MINIO_PRESIGNED_URL_EXP_IN_MINUTES}
+      - BATCH_SIZE=${BATCH_SIZE}
+      - UPLOAD_EXPIRY_DURATION_IN_HOURS=${UPLOAD_EXPIRY_DURATION_IN_HOURS}
 
     depends_on:
       uploader-db:

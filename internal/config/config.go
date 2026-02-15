@@ -25,6 +25,10 @@ type config struct {
 	MinioSecretAccessKey          string `required:"true" split_words:"true"`
 	MinioDataBucketName           string `required:"true" split_words:"true"`
 	MinioPresignedURLExpInMinutes int    `required:"true" split_words:"true"`
+
+	// batch job configs
+	BatchSize                   int `required:"true" split_words:"true"`
+	UploadExpiryDurationInHours int `required:"true" split_words:"true"`
 }
 
 // NewAppConfig returns the app config

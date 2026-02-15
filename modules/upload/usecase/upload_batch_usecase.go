@@ -21,8 +21,18 @@ type uploadBatchUsecase struct {
 }
 
 // NewUploadBatchUsecase returns an implementation of batch usecase
-func NewUploadBatchUsecase(bucketName string, uploadBatchRepo domain.UploadBatchRepository) domain.UploadBatchUsecase {
-	return &uploadBatchUsecase{bucketName: bucketName, uploadBatchRepository: uploadBatchRepo}
+func NewUploadBatchUsecase(
+	log logger.Logger,
+	bucketName string,
+	storage storage.Storage,
+	uploadBatchRepo domain.UploadBatchRepository,
+) domain.UploadBatchUsecase {
+	return &uploadBatchUsecase{
+		log:                   log,
+		bucketName:            bucketName,
+		storage:               storage,
+		uploadBatchRepository: uploadBatchRepo,
+	}
 }
 
 // AbortStaleMultipartUploads removes stale uploads from storage and marks as failed
