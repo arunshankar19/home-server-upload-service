@@ -29,6 +29,10 @@ type config struct {
 	// batch job configs
 	BatchSize                   int `required:"true" split_words:"true"`
 	UploadExpiryDurationInHours int `required:"true" split_words:"true"`
+
+	// file explorer server details
+	FileExplorerHostName string `required:"true" split_words:"true"`
+	FileExplorerPort     int    `required:"true" split_words:"true"`
 }
 
 // NewAppConfig returns the app config

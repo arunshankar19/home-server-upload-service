@@ -20,9 +20,7 @@ type InitiateUploadResponseDTO struct {
 // PresignedMultipartURLReqDTO represents presigned multipart request
 type PresignedMultipartURLReqDTO struct {
 	UploadEventID string `json:"upload_event_id"`
-	FileName      string `json:"file_name"`
 	IsMultipart   bool   `json:"is_multipart"`
-	UploadID      string `json:"upload_id"`
 	PartNumber    int    `json:"part_number"`
 }
 
@@ -34,9 +32,6 @@ type PresignedMultipartResponseDTO struct {
 // CompleteUploadReqDTO represents part numbers and etag for multipart upload
 type CompleteUploadReqDTO struct {
 	UploadEventID string                  `json:"upload_event_id"`
-	FileName      string                  `json:"file_name"`
-	IsMultipart   bool                    `json:"is_multipart"`
-	UploadID      string                  `json:"upload_id"`
 	Etags         []PartNumberEtagMapping `json:"e_tags"`
 }
 

@@ -3,12 +3,13 @@ module github.com/arunshankar19/home-server-upload-service
 go 1.25.1
 
 require (
-	github.com/arunshankar19/home-server-common-utils v0.5.0
+	github.com/arunshankar19/home-server-common-utils v0.6.0
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.6
 	github.com/kelseyhightower/envconfig v1.4.0
+	google.golang.org/grpc v1.76.0
 )
 
 require (
@@ -45,6 +46,5 @@ require (
 	golang.org/x/text v0.28.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250825161204-c5933d9347a5 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250825161204-c5933d9347a5 // indirect
-	google.golang.org/grpc v1.76.0 // indirect
 	google.golang.org/protobuf v1.36.8 // indirect
 )
