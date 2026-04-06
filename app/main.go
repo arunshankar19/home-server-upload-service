@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -11,12 +12,15 @@ import (
 	"github.com/arunshankar19/home-server-upload-service/domain"
 	"github.com/arunshankar19/home-server-upload-service/internal/config"
 	"github.com/arunshankar19/home-server-upload-service/internal/database"
+	fileexplorer "github.com/arunshankar19/home-server-upload-service/internal/file_explorer"
 	"github.com/arunshankar19/home-server-upload-service/internal/middlewares"
 	uploadHandler "github.com/arunshankar19/home-server-upload-service/modules/upload/delivery/http"
 	uploadRepository "github.com/arunshankar19/home-server-upload-service/modules/upload/repository/postgres"
 	uploadUsecase "github.com/arunshankar19/home-server-upload-service/modules/upload/usecase"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -50,6 +54,19 @@ func main() {
 	l.Info("application configs read successfully", map[string]any{
 		"appConfig": appConfig,
 	})
+
+	conn, err := grpc.NewClient(
+		fmt.Sprintf(
+			"dns:///%s:%d", appConfig.FileExplorerHostName, appConfig.FileExplorerPort,
+		),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		l.Error("failed to create new grpc client", map[string]any{"error": err})
+		panic(err)
+	}
+
+	fileExplorerClient := fileexplorer.NewFileExplorerClient(conn)
 
 	// initialise tracer
 	trace := observability.NewNoopTracer()
@@ -98,7 +115,14 @@ func main() {
 	}
 
 	uploadRepo := uploadRepository.NewUploadRepository(db, trace)
-	uploadUsecae := uploadUsecase.NewUploadUsecase(l, appConfig.MinioDataBucketName, appConfig.MinioPresignedURLExpInMinutes, storage, uploadRepo)
+	uploadUsecae := uploadUsecase.NewUploadUsecase(
+		l,
+		appConfig.MinioDataBucketName,
+		appConfig.MinioPresignedURLExpInMinutes,
+		storage,
+		fileExplorerClient,
+		uploadRepo,
+	)
 	uploadHandler := uploadHandler.NewUploadHandler(uploadUsecae)
 
 	httpHandler := handlers{

@@ -32,9 +32,10 @@ type InitUploadResult struct {
 
 // UploadRepository defines the repository funcs
 type UploadRepository interface {
-	InsertUploadEvent(ctx context.Context, uploadEvent UploadEvent) (string, error)
+	InsertUploadEvent(ctx context.Context, uploadEvent UploadEvent) error
 	UpdateUploadEventStatus(ctx context.Context, uploadEventID string, status string) error
 	FindUploadOwner(ctx context.Context, uploadEventID string) (string, error)
+	GetUploadEvent(ctx context.Context, uploadEventID string) (*UploadEvent, error)
 }
 
 // UploadUsecase defines business usecase funcs
