@@ -11,6 +11,8 @@ COPY . .
 RUN GOOS=linux CGO_ENABLED=0 go build -o upload-service ./app/
 
 FROM alpine:3.22
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /upload_service
-COPY --from=builder /upload_service/upload-service .
+COPY --chown=appuser:appgroup --from=builder /upload_service/upload-service .
+USER appuser
 CMD ["./upload-service"]
