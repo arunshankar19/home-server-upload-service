@@ -1,0 +1,5 @@
+BEGIN;
+
+DROP SCHEMA IF EXISTS uploader_service;
+
+COMMIT;
