@@ -69,10 +69,10 @@ func main() {
 	fileExplorerClient := fileexplorer.NewFileExplorerClient(conn)
 
 	// initialise tracer
-	trace := observability.NewNoopTracer()
+	tracer := observability.NewNoopTracer()
 	if appConfig.ObservabilityEnabled {
 		observability.InitTraceProvider(ctx, appConfig.TraceExpoterURL, serviceName)
-		trace = observability.NewTracer(serviceName)
+		tracer = observability.NewTracer(serviceName)
 	}
 
 	dbHost := database.WithHost(appConfig.PostgresHost)
@@ -114,16 +114,17 @@ func main() {
 		panic(err)
 	}
 
-	uploadRepo := uploadRepository.NewUploadRepository(db, trace)
+	uploadRepo := uploadRepository.NewUploadRepository(db, tracer)
 	uploadUsecae := uploadUsecase.NewUploadUsecase(
 		l,
+		tracer,
 		appConfig.MinioDataBucketName,
 		appConfig.MinioPresignedURLExpInMinutes,
 		storage,
 		fileExplorerClient,
 		uploadRepo,
 	)
-	uploadHandler := uploadHandler.NewUploadHandler(uploadUsecae)
+	uploadHandler := uploadHandler.NewUploadHandler(tracer, uploadUsecae)
 
 	httpHandler := handlers{
 		uploadHandler: uploadHandler,

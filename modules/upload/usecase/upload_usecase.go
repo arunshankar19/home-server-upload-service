@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/arunshankar19/home-server-common-utils/logger"
+	"github.com/arunshankar19/home-server-common-utils/observability"
 	"github.com/arunshankar19/home-server-common-utils/storage"
 	"github.com/arunshankar19/home-server-upload-service/domain"
 	"github.com/arunshankar19/home-server-upload-service/internal/ctxkey"
@@ -20,6 +21,7 @@ const (
 
 type uploadUsecase struct {
 	log                logger.Logger
+	tracer             observability.Tracer
 	uploadBucket       string
 	preSignedURLExp    time.Duration
 	storage            storage.Storage
@@ -30,6 +32,7 @@ type uploadUsecase struct {
 // NewUploadUsecase returns a upload usecase implementation
 func NewUploadUsecase(
 	log logger.Logger,
+	tracer observability.Tracer,
 	uploadBucket string,
 	presignedURLExp int,
 	storage storage.Storage,
@@ -38,6 +41,7 @@ func NewUploadUsecase(
 ) domain.UploadUsecase {
 	return &uploadUsecase{
 		log:                log,
+		tracer:             tracer,
 		uploadBucket:       uploadBucket,
 		preSignedURLExp:    time.Duration(presignedURLExp) * time.Minute,
 		storage:            storage,
@@ -51,6 +55,9 @@ func (u *uploadUsecase) InitiateUpload(
 	ctx context.Context,
 	initiateUploadReq domain.InitiateUploadReqDTO,
 ) (*domain.InitUploadResult, error) {
+
+	ctx, span := u.tracer.StartSpan(ctx, "Usecase-InitiateUpload")
+	defer span.End()
 
 	userIDString, ok := ctx.Value(ctxkey.UserID).(string)
 	if !ok {
@@ -108,6 +115,9 @@ func (u *uploadUsecase) GetPresignedURL(
 	presignedURLReq domain.PresignedMultipartURLReqDTO,
 ) (string, error) {
 
+	ctx, span := u.tracer.StartSpan(ctx, "Usecase-GetPresignedURL")
+	defer span.End()
+
 	userIDString, ok := ctx.Value(ctxkey.UserID).(string)
 	if !ok {
 		u.log.Error("unauthorised user - there is no user id in context", nil)
@@ -159,6 +169,9 @@ func (u *uploadUsecase) CompleteUpload(
 	ctx context.Context,
 	completeUploadReq domain.CompleteUploadReqDTO,
 ) error {
+
+	ctx, span := u.tracer.StartSpan(ctx, "Usecase-CompleteUpload")
+	defer span.End()
 
 	userIDString, ok := ctx.Value(ctxkey.UserID).(string)
 	if !ok {
