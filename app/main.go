@@ -71,7 +71,11 @@ func main() {
 	// initialise tracer
 	tracer := observability.NewNoopTracer()
 	if appConfig.ObservabilityEnabled {
-		observability.InitTraceProvider(ctx, appConfig.TraceExpoterURL, serviceName)
+		_, err := observability.InitTraceProvider(ctx, appConfig.TraceExpoterURL, serviceName)
+		if err != nil {
+			l.Error("failed to connect with trace provider", map[string]any{"error": err})
+			panic(err)
+		}
 		tracer = observability.NewTracer(serviceName)
 	}
 
